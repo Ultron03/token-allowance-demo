@@ -74,7 +74,6 @@ There is no budget code in the app itself. The integration is a dependency and s
 | `token-allowance-spring-boot-starter` | Adds the budget checks to every `ChatClient` built from Spring AI's `ChatClient.Builder` |
 | `spring-ai-starter-model-ollama` | The chat model |
 | `spring-boot-starter-webmvc` | The HTTP endpoint |
-| `spring-boot-starter-validation` | Token Allowance validates its configuration properties, which needs a Bean Validation implementation |
 
 **Configuration** ([application.yml](src/main/resources/application.yml)):
 
