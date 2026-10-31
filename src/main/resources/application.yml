@@ -1,0 +1,11 @@
+spring:
+  ai:
+    ollama:
+      chat:
+        model: llama3.2
+token-allowance:
+  pricing:
+    models:
+      - { name: llama3.2, input-per-mtok: "1.00", output-per-mtok: "2.00" }
+  limits:
+    - { scope: user, window: daily, max-tokens: 2000 }
