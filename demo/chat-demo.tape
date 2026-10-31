@@ -1,5 +1,5 @@
 # Records demo/token-allowance.gif: alice gets three answers, then HTTP 429, while bob still gets through.
-# Run from the project root with Ollama running:  vhs demo/chat-demo.tape
+# Run from the project root with Ollama running and port 8080 free:  vhs demo/chat-demo.tape
 
 Output demo/token-allowance.gif
 
@@ -7,9 +7,9 @@ Require curl
 Require java
 
 Set Shell "bash"
-Set FontSize 18
-Set Width 1400
-Set Height 760
+Set FontSize 22
+Set Width 1380
+Set Height 900
 Set Padding 24
 Set Theme "Catppuccin Mocha"
 Set WindowBar Colorful
@@ -36,12 +36,12 @@ Enter
 Wait@60s
 Sleep 2s
 
-Type "curl localhost:8080/chat -H 'X-User-Id: alice' -d 'Give me a one-line fun fact about octopuses.'"
+Type "curl localhost:8080/chat -H 'X-User-Id: alice' -d 'One-line fun fact about octopuses.'"
 Enter
 Wait@60s
 Sleep 2s
 
-Type "curl localhost:8080/chat -H 'X-User-Id: alice' -d 'Describe Java in one sentence.'"
+Type "curl localhost:8080/chat -H 'X-User-Id: alice' -d 'Describe Java in one short sentence.'"
 Enter
 Wait@60s
 Sleep 2s
