@@ -1,0 +1,97 @@
+@property --plan {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2f5bea;
+}
+
+@property --plan-strong {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2f5bea;
+}
+
+:root {
+  --ground: #f5f6f4;
+  --surface: #ffffff;
+  --ink: #16181b;
+  --ink-soft: #464b53;
+  --ink-faint: #5f646c;
+  --hairline: #d8dbd4;
+  --free: #2f5bea;
+  --free-strong: #2f5bea;
+  --pro: #e8642c;
+  /* White text on --pro is 3.3:1; buttons use this darker shade (5.3:1). */
+  --pro-strong: #b9461b;
+  --refused: #c4302b;
+  --refused-wash: #fbeceb;
+  --fits: #2e8b57;
+  --radius: 6px;
+  --sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  caret-color: var(--plan);
+  scrollbar-color: #b9bdb5 transparent;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--plan) 24%, white);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--plan);
+  outline-offset: 2px;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

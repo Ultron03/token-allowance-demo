@@ -1,0 +1,10 @@
+# Keeps budgets in Redis (docker compose up), so they survive restarts and are shared by every instance.
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 1s
+token-allowance:
+  store:
+    type: redis

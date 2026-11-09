@@ -1,0 +1,14 @@
+# Short answers and small budgets, so every limit is reached within a few requests.
+spring:
+  ai:
+    ollama:
+      chat:
+        options:
+          num-predict: 60
+token-allowance:
+  limits:
+    - { scope: user, window: daily, max-tokens: 200 }
+    - { scope: tenant, window: daily, max-tokens: 280 }
+  plans:
+    pro:
+      - { scope: user, window: daily, max-tokens: 2000 }
