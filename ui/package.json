@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test \"src/lib/*.test.ts\""
+    "test": "node --test \"src/lib/*.test.ts\"",
+    "record-demo": "node scripts/record-demo.mjs"
   },
   "dependencies": {
     "geist": "1.9.2",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "playwright": "1.60.0",
     "typescript": "^5"
   }
 }

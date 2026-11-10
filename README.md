@@ -8,7 +8,7 @@ alice gets answers until her daily budget is used up. Her next request is refuse
 
 ![Token Allowance demo: a streamed answer, an agent stopped after five model calls, and a dollar budget at Gemini's published prices](demo/agent-and-dollars.gif)
 
-On a hosted model: a streamed answer is charged like any other, the agent is stopped after five model calls, and a dollar budget priced at Gemini 3.5 Flash-Lite's published rates runs out after a few answers.
+On a hosted model: a streamed answer is charged like any other, the agent is stopped after five model calls, and a dollar budget priced at Gemini 3.5 Flash-Lite's published rates runs out after two answers.
 
 ## Requirements
 
@@ -45,7 +45,11 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. Pick alice, carol or bob on the left, send messages in Chat or Agent mode, and watch their budgets on the right. A refused request stays in the conversation with the library's reason and when the budget resets. The console reaches the app through its own server, so the app needs no CORS setup; set `TOKEN_ALLOWANCE_API_URL` if the app is not on `http://localhost:8080`.
+Open http://localhost:3000. Pick alice, carol or bob on the left, send messages in Chat or Agent mode, and watch their budgets on the right. A refused request stays in the conversation with the library's reason and when the budget resets.
+
+![The demo console: alice's dollar budget runs out after two answers, then carol's agent is stopped after five model calls](demo/console.gif)
+
+Here the app runs with the `gemini,priced` profiles (see [Dollar budgets](#dollar-budgets)), and the wait for each answer is sped up. The console reaches the app through its own server, so the app needs no CORS setup; set `TOKEN_ALLOWANCE_API_URL` if the app is not on `http://localhost:8080`.
 
 ## Try it with curl
 
@@ -67,7 +71,7 @@ Once alice's budget is used up, the response is:
 }
 ```
 
-bob is still served, and carol gets ten times as much as alice because she is on the pro plan. When alice and carol together reach acme's 5,000 tokens, both are refused with `tenant daily budget exceeded`.
+The `Retry-After` header holds the seconds until the budget's window resets. bob is still served, and carol gets ten times as much as alice because she is on the pro plan. When alice and carol together reach acme's 5,000 tokens, both are refused with `tenant daily budget exceeded`.
 
 **Stream** the answer instead; it is charged the same way:
 
@@ -137,7 +141,7 @@ Add the `priced` profile to the `gemini` one to budget in dollars instead of tok
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=gemini,priced
 ```
 
-With a free-tier key, nothing is actually billed; the costs are what the same calls would cost on the paid tier. Each call first reserves the price of a 60-token answer (`estimate.output-tokens: 60`), about $0.00015, so alice is refused after a few answers once what is left is less than one reservation, even though each answer costs only about $0.00004.
+With a free-tier key, nothing is actually billed; the costs are what the same calls would cost on the paid tier. Each call first reserves the price of a 60-token answer (`estimate.output-tokens: 60`), about $0.00015, so alice is refused after two answers once what is left is less than one reservation, even though each answer costs only about $0.00004.
 
 ## Share budgets in Redis and watch them in Grafana
 
@@ -230,7 +234,9 @@ For dollar limits, Redis, alerts and the other options, see the [Token Allowance
 
 ## Recording the demo
 
-The GIFs are recorded with [VHS](https://github.com/charmbracelet/vhs) from [demo/chat-demo.tape](demo/chat-demo.tape) (Ollama, `small` profile) and [demo/agent-demo.tape](demo/agent-demo.tape) (Gemini, `gemini,priced` profiles; needs `GEMINI_API_KEY` in `.env`). With VHS, `ttyd`, `ffmpeg` and `jq` installed:
+Each recording uses the provider that shows its part best. The chat recording runs on Ollama, because it needs no key and a local model answers quickly. The agent, dollar and console recordings run on Gemini 3.5 Flash-Lite, the only one of the three where the agent keeps calling its tool until the cap stops it (`llama3.2` stops by itself, and the agent fails on Groq).
+
+The terminal GIFs are recorded with [VHS](https://github.com/charmbracelet/vhs) from [demo/chat-demo.tape](demo/chat-demo.tape) (Ollama, `small` profile) and [demo/agent-demo.tape](demo/agent-demo.tape) (`gemini,priced` profiles; needs `GEMINI_API_KEY` in `.env`). With VHS, `ttyd`, `ffmpeg` and `jq` installed:
 
 ```bash
 vhs demo/chat-demo.tape
@@ -238,3 +244,20 @@ vhs demo/agent-demo.tape
 ```
 
 Each tape builds and starts the app off camera, records the requests, then stops the app. [demo/.curlrc](demo/.curlrc) adds `-s`, the `Content-Type` header and the `→ HTTP <status>` line to each curl command, so the recorded commands stay short.
+
+The console GIF is recorded with Playwright by [ui/scripts/record-demo.mjs](ui/scripts/record-demo.mjs) and converted with `ffmpeg`, which also speeds up the waits for the model. Start the app with fresh budgets, and the console in production mode so the Next.js dev overlay stays out of the picture, each in its own terminal:
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=gemini,priced
+cd ui && npm run build && npm start
+```
+
+Then record. `npx playwright install chromium` is needed only the first time:
+
+```bash
+cd ui
+npx playwright install chromium
+npm run record-demo
+```
+
+The GIF is written to `demo/console.gif`.
